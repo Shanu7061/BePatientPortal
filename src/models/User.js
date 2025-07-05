@@ -14,10 +14,12 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
   roles: {
+    required: false,
     type: Array,
     default: [],
   },
   active: {
+    required: false,
     type: Boolean,
     default: true,
   },

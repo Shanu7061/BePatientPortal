@@ -28,6 +28,7 @@ app.use("/", express.static(path.join(__dirname, "public")));
 app.use("/", require("./src/routes/root"));
 app.use("/auth", require("./src/routes/authRoutes"));
 app.use("/users", require("./src/routes/userRoutes"));
+app.use("/appointments", require("./src/routes/appointmentRoutes"));
 
 app.all("*", (req, res) => {
   res.status(404);
