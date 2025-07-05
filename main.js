@@ -54,3 +54,5 @@ mongoose.connection.on("error", (err) => {
     "mongoErrLog.log"
   );
 });
+
+app.use(errorHandler);

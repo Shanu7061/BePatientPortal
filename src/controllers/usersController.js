@@ -2,16 +2,20 @@ const User = require("../models/User");
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 
-const getAllUsers = asyncHandler(async (req, res) => {
+const getAllUsers = asyncHandler(async (req, res, next) => {
   // Get all users from MongoDB
-  const users = await User.find().select("-password").lean();
+  try {
+    const users = await User.find().select("-password").lean();
 
-  // If no users
-  if (!users?.length) {
-    return res.status(400).json({ message: "No users found" });
+    // If no users
+    if (!users?.length) {
+      return res.status(400).json({ message: "No users found" });
+    }
+
+    res.json(users);
+  } catch (err) {
+    next(err);
   }
-
-  res.json(users);
 });
 
 const getUserById = asyncHandler(async (req, res) => {
@@ -24,36 +28,47 @@ const getUserById = asyncHandler(async (req, res) => {
   }
 });
 
-const createNewUser = asyncHandler(async (req, res) => {
+const createNewUser = asyncHandler(async (req, res, next) => {
   const { username, password, email, roles } = req.body;
-  const users = await User.find().select("-password").lean();
-  const id = users?.length + 1 || 0;
-  // Confirm data
-  if (!username || !password || !email) {
-    return res.status(400).json({ message: "All fields are required" });
-  }
+  try {
+    const users = await User.find().select("-password").lean();
+    const id = users?.length + 1 || 0;
+    // Confirm data
+    if (!username || !password || !email) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
 
-  // Check for duplicate username
-  const duplicate = await User.findOne({ username }).lean().exec();
+    // Check for duplicate username
+    const duplicate = await User.findOne({ username }).lean().exec();
 
-  if (duplicate) {
-    return res.status(409).json({ message: "Duplicate username" });
-  }
+    if (duplicate) {
+      return res.status(409).json({ message: "Duplicate username" });
+    }
 
-  // Hash password
-  const hashedPwd = await bcrypt.hash(password, 10); // salt rounds
-  const liked = [];
+    // Hash password
+    const hashedPwd = await bcrypt.hash(password, 10); // salt rounds
+    const liked = [];
 
-  const userObject = { username, email, password: hashedPwd, roles, id, liked };
+    const userObject = {
+      username,
+      email,
+      password: hashedPwd,
+      roles,
+      id,
+      liked,
+    };
 
-  // Create and store new user
-  const user = await User.create(userObject);
+    // Create and store new user
+    const user = await User.create(userObject);
 
-  if (user) {
-    //created
-    res.status(201).json(user);
-  } else {
-    res.status(400).json({ message: "Invalid user data received" });
+    if (user) {
+      //created
+      res.status(201).json(user);
+    } else {
+      res.status(400).json({ message: "Invalid user data received" });
+    }
+  } catch (err) {
+    next(err);
   }
 });
 
