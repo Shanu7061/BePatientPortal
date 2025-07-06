@@ -7,7 +7,7 @@ Front-End:- REACT 18, MUI, TypeScript(Optional), Redux-Toolkit, React Testing li
 Back-End :- Node, Express, MongoDb
 
 -Created collection for Users and Appointments
--Developed enpoints for Login, Register and Logout
+-Developed enpoints for Login, Register,Logout
 -Developed enpoints for Appointment creations,and to get list of all the appointments
 
 SECURITY IMPROVEMENTS

@@ -1,5 +1,3 @@
-import { Schema } from "mongoose";
-
 const mongoose = require("mongoose");
 
 const appointmentSchema = new mongoose.Schema(
@@ -9,18 +7,26 @@ const appointmentSchema = new mongoose.Schema(
       required: true,
     },
     patient_id: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Users",
       required: true,
     },
     reason: {
       type: String,
-      trim: true,
-      minlength: 3,
       required: true,
     },
+    notes: {
+      type: String,
+    },
+    status: {
+      type: String,
+      enum: ["scheduled", "completed", "cancelled"],
+      default: "scheduled",
+    },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
 module.exports = mongoose.model("Appointment", appointmentSchema);

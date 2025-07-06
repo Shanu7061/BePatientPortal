@@ -14,9 +14,9 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
   roles: {
-    required: false,
-    type: Array,
-    default: [],
+    type: String,
+    enum: ["patient", "doctor", "admin"],
+    default: "patient",
   },
   active: {
     required: false,

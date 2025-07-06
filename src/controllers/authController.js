@@ -1,7 +1,8 @@
-const User = require("../models/User");
+const User = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
+const { id } = require("date-fns/locale");
 // @desc Login
 // @route POST /auth
 // @access Public
@@ -29,6 +30,7 @@ const login = asyncHandler(async (req, res) => {
         email: foundUser.email,
         roles: foundUser.roles,
         username: foundUser.username,
+        id: foundUser._id,
       },
     },
     `${process.env.ACCESS_TOKEN_SECRET}`,
@@ -81,6 +83,7 @@ const refresh = (req, res) => {
             email: foundUser.email,
             roles: foundUser.roles,
             username: foundUser.username,
+            id: foundUser._id,
           },
         },
         process.env.ACCESS_TOKEN_SECRET,
